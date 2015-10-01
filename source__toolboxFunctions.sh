@@ -392,6 +392,31 @@ GIT_CLONE () {
 }
 
 ################################################################################
+# GIT_CMDS
+# General youtube-dl wrapper
+BEST_DOWNLOAD() {
+  while [ "${#@}" -gt "0" ] ; do
+        DOWNLOAD_URL="${1}"
+        FLV_OUTPUT_FIL=$(
+         youtube-dl                                          \
+         --username="${GMAIL_USERNAME}"                      \
+         --password="${GMAIL_PASSWORD}"                      \
+         -e "${DOWNLOAD_URL}"                                \
+            |                                                \
+            sed                                              \
+               -e s,"[^a-zA-Z0-9_ /]",,g                     \
+               -e s,"  *"," ",g                              \
+               -e s," ","",g                                 \
+               -e s,"/","",g                                 \
+               -e s,"_","-",g                                \
+               -e s,$,.flv,g
+        )
+        youtube-dl --output="${FLV_OUTPUT_FIL}" "${DOWNLOAD_URL}"
+        shift
+  done
+}
+
+################################################################################
 #       _______  _______  _______  ___        _______  _______  __   __ 
 #      |       ||       ||       ||   |      |  _    ||       ||  |_|  |
 #      |_     _||   _   ||   _   ||   |      | |_|   ||   _   ||       |
